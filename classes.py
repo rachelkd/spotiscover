@@ -237,7 +237,6 @@ class WeightedGraph(Graph):
         The new vertex is not adjacent to any other vertices.
         Do nothing if the given item is already in this graph.
         """
-        # TODO: find a way to map track (artist, title) to Track objects
         if item not in self._vertices:
             self._vertices[item] = _WeightedVertex(item)
             self.tracks_to_objects[(item.artist_name, item.track_name)] = item
@@ -264,6 +263,19 @@ class WeightedGraph(Graph):
         else:
             # We didn't find an existing vertex for both items.
             raise ValueError
+
+    def get_track_object(self, track_tup: tuple[str, str]) -> Track:
+        """Return the Track corresponding to the given track tuple.
+
+        Raise ValueError if given track tuple is not a key in self.tracks_to_objects.
+
+        Track tuple is formatted as such:
+            - ({artist_name}, {track_name})
+        """
+        if track_tup not in self.tracks_to_objects:
+            raise ValueError(f'{track_tup} does not appear in this graph.')
+
+        return self.tracks_to_objects[track_tup]
 
     def get_occurences(self, item: Any) -> int:
         """Return the number of times the given item appears in the playlists in this graph.
