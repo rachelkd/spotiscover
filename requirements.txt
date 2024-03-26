@@ -1,5 +1,10 @@
 # Packages required for Project 2
 
+python-ta~=2.7.0
+networkx
+
+# -------- DELETE BELOW UPON SUBMISSION
+
 # Testing and code checking
 hypothesis
 pytest

@@ -47,7 +47,7 @@ class Track:
     album_uri: str
 
     def __init__(self, track_name: str, artist_name: str, album_name: str,
-                 track_uri: str, artist_uri: str, album_uri: str):
+                 track_uri: str, artist_uri: str, album_uri: str) -> None:
         """Initialize a new Track with the given track name, artist name, album name,
         and respective Spotify Uniform Resource Indicators (URIs).
         """
@@ -58,7 +58,16 @@ class Track:
         self.artist_uri = artist_uri
         self.album_uri = album_uri
 
-    def add_to_playlist(self, pid: int):
+    def __str__(self) -> str:
+        """Return a string representation of this Track."""
+        return (f'Track(track_name={self.track_name}, '
+                f'artist_name={self.artist_name}, '
+                f'album_name={self.album_name}, '
+                f'track_uri={self.track_uri}, '
+                f'artist_uri={self.artist_uri}, '
+                f'album_uri={self.album_uri})')
+
+    def add_to_playlist(self, pid: int) -> None:
         """Adds the given playlist id to this Track's playlists."""
         self.playlists.add(pid)
 
@@ -220,14 +229,16 @@ class WeightedGraph(Graph):
     #     - _vertices:
     #         A collection of the vertices contained in this graph.
     #         Maps item to _WeightedVertex object.
-    tracks_to_objects: dict[tuple[str, str], Track]
+    # tracks_to_objects: dict[tuple[str, str], Track]
+    # TODO: Delete if needed
     _vertices: dict[Any, _WeightedVertex]
 
     def __init__(self) -> None:
         """Initialize an empty graph (no vertices or edges),
         and an empty mapping from track details to Track objects."""
         self._vertices = {}
-        self.tracks_to_objects = {}
+        # self.tracks_to_objects = {}
+        # TODO: Delete if needed
 
         Graph.__init__(self)
 
@@ -235,11 +246,12 @@ class WeightedGraph(Graph):
         """Add a vertex with the given item.
 
         The new vertex is not adjacent to any other vertices.
-        Do nothing if the given item is already in this graph.
+        If given item is already in the graph, then increase its occurences by 1.
         """
         if item not in self._vertices:
             self._vertices[item] = _WeightedVertex(item)
-            self.tracks_to_objects[(item.artist_name, item.track_name)] = item
+            # self.tracks_to_objects[(item.artist_name, item.track_name)] = item
+            # TODO: Delete if needed
         else:
             track = self._vertices[item]
             track.occurences += 1
@@ -264,18 +276,18 @@ class WeightedGraph(Graph):
             # We didn't find an existing vertex for both items.
             raise ValueError
 
-    def get_track_object(self, track_tup: tuple[str, str]) -> Track:
-        """Return the Track corresponding to the given track tuple.
-
-        Raise ValueError if given track tuple is not a key in self.tracks_to_objects.
-
-        Track tuple is formatted as such:
-            - ({artist_name}, {track_name})
-        """
-        if track_tup not in self.tracks_to_objects:
-            raise ValueError(f'{track_tup} does not appear in this graph.')
-
-        return self.tracks_to_objects[track_tup]
+    # def get_track_object(self, track_tup: tuple[str, str]) -> Track:
+    #     """Return the Track corresponding to the given track tuple.
+    #
+    #     Raise ValueError if given track tuple is not a key in self.tracks_to_objects.
+    #
+    #     Track tuple is formatted as such:
+    #         - ({artist_name}, {track_name})
+    #     """
+    #     if track_tup not in self.tracks_to_objects:
+    #         raise ValueError(f'{track_tup} does not appear in this graph.')
+    #
+    #     return self.tracks_to_objects[track_tup]
 
     def get_occurences(self, item: Any) -> int:
         """Return the number of times the given item appears in the playlists in this graph.
@@ -293,9 +305,13 @@ class WeightedGraph(Graph):
 
         Return 0 if item1 and item2 are not adjacent.
 
-        Preconditions:
-            - item1 and item2 are vertices in this graph
+        Raise ValueError if item1 and item2 are not in this graph.
         """
+        if item1 not in self._vertices:
+            raise ValueError(f'{item1} is not an item in this graph.')
+        if item2 not in self._vertices:
+            raise ValueError(f'{item2} is not an item in this graph.')
+
         v1 = self._vertices[item1]
         v2 = self._vertices[item2]
         return v1.neighbours.get(v2, 0)
@@ -339,7 +355,7 @@ class WeightedGraph(Graph):
 if __name__ == '__main__':
     import python_ta
     python_ta.check_all(config={
-        'extra-imports': [],  # the names (strs) of imported modules
+        'extra-imports': ['networkx'],  # the names (strs) of imported modules
         'allowed-io': ['print', 'open', 'input'],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
