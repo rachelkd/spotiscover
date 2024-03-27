@@ -57,6 +57,7 @@ class Track:
         self.track_uri = track_uri
         self.artist_uri = artist_uri
         self.album_uri = album_uri
+        self.playlists = set()
 
     def __str__(self) -> str:
         """Return a string representation of this Track."""
@@ -216,6 +217,10 @@ class _WeightedVertex(_Vertex):
         self.neighbours = {}
         self.occurences = 1  # By default, a Track appears at least once in our network.
 
+    def __str__(self) -> str:
+        """Return a string representation of this vertex."""
+        return f'_WeightedVertex(item={self.item}, occurences={self.occurences})'
+
 
 class WeightedGraph(Graph):
     """A weighted graph used to represent a playlist network that keeps track of Tracks in playlists.
@@ -229,6 +234,7 @@ class WeightedGraph(Graph):
     #     - _vertices:
     #         A collection of the vertices contained in this graph.
     #         Maps item to _WeightedVertex object.
+
     # tracks_to_objects: dict[tuple[str, str], Track]
     # TODO: Delete if needed
     _vertices: dict[Any, _WeightedVertex]
@@ -260,6 +266,8 @@ class WeightedGraph(Graph):
         """Add an edge between the two vertices with the given items in this graph,
         with the given weight.
 
+        The weight is the number of playlists that item1 and item2 both appear in.
+
         Raise a ValueError if item1 or item2 do not appear as vertices in this graph.
 
         Preconditions:
@@ -269,9 +277,15 @@ class WeightedGraph(Graph):
             v1 = self._vertices[item1]
             v2 = self._vertices[item2]
 
-            # Add the new edge
-            v1.neighbours[v2] = weight
-            v2.neighbours[v1] = weight
+            # Check if an edge already exists for this graph's edge
+            if v2 in v1.neighbours and v1 in v2.neighbours:
+                # Add one to the existing weight
+                v1.neighbours[v2] += 1
+                v2.neighbours[v1] += 1
+            else:
+                # Add the new edge
+                v1.neighbours[v2] = weight
+                v2.neighbours[v1] = weight
         else:
             # We didn't find an existing vertex for both items.
             raise ValueError
