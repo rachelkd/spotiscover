@@ -61,12 +61,15 @@ class Track:
 
     def __str__(self) -> str:
         """Return a string representation of this Track."""
+        # return (f'Track(track_name={self.track_name}, '
+        #         f'artist_name={self.artist_name}, '
+        #         f'album_name={self.album_name}, '
+        #         f'track_uri={self.track_uri}, '
+        #         f'artist_uri={self.artist_uri}, '
+        #         f'album_uri={self.album_uri})')
         return (f'Track(track_name={self.track_name}, '
                 f'artist_name={self.artist_name}, '
-                f'album_name={self.album_name}, '
-                f'track_uri={self.track_uri}, '
-                f'artist_uri={self.artist_uri}, '
-                f'album_uri={self.album_uri})')
+                f'album_name={self.album_name})')
 
     def add_to_playlist(self, pid: int) -> None:
         """Adds the given playlist id to this Track's playlists."""
@@ -198,7 +201,7 @@ class _WeightedVertex(_Vertex):
         - item: The data stored in this vertex, representing a user or book.
         - neighbours: The vertices that are adjacent to this vertex, and their corresponding
             edge weights.
-        - occurences: The number of times this Track appears in our playlist graph/network.
+        - occurrences: The number of times this Track appears in our playlist graph/network.
 
     Representation Invariants:
         - self not in self.neighbours
@@ -206,7 +209,7 @@ class _WeightedVertex(_Vertex):
     """
     item: Track
     neighbours: dict[_WeightedVertex, Union[int, float]]
-    occurences: int
+    occurrences: int
 
     def __init__(self, item: Any) -> None:
         """Initialize a new vertex with the given item.
@@ -215,11 +218,11 @@ class _WeightedVertex(_Vertex):
         """
         super().__init__(item)
         self.neighbours = {}
-        self.occurences = 1  # By default, a Track appears at least once in our network.
+        self.occurrences = 1  # By default, a Track appears at least once in our network.
 
     def __str__(self) -> str:
         """Return a string representation of this vertex."""
-        return f'_WeightedVertex(item={self.item}, occurences={self.occurences})'
+        return f'_WeightedVertex(item={self.item}, occurrences={self.occurrences})'
 
 
 class WeightedGraph(Graph):
@@ -252,7 +255,7 @@ class WeightedGraph(Graph):
         """Add a vertex with the given item.
 
         The new vertex is not adjacent to any other vertices.
-        If given item is already in the graph, then increase its occurences by 1.
+        If given item is already in the graph, then increase its occurrences by 1.
         """
         if item not in self._vertices:
             self._vertices[item] = _WeightedVertex(item)
@@ -260,7 +263,7 @@ class WeightedGraph(Graph):
             # TODO: Delete if needed
         else:
             track = self._vertices[item]
-            track.occurences += 1
+            track.occurrences += 1
 
     def add_edge(self, item1: Any, item2: Any, weight: Union[int, float] = 1) -> None:
         """Add an edge between the two vertices with the given items in this graph,
@@ -303,7 +306,7 @@ class WeightedGraph(Graph):
     #
     #     return self.tracks_to_objects[track_tup]
 
-    def get_occurences(self, item: Any) -> int:
+    def get_occurrences(self, item: Any) -> int:
         """Return the number of times the given item appears in the playlists in this graph.
 
         Raise a ValueError if item does not appear as a vertex in this graph.
@@ -312,7 +315,7 @@ class WeightedGraph(Graph):
             raise ValueError(f'{item} does not appear in this graph.')
 
         vertex = self._vertices[item]
-        return vertex.occurences
+        return vertex.occurrences
 
     def get_weight(self, item1: Any, item2: Any) -> Union[int, float]:
         """Return the weight of the edge between the given items.
