@@ -208,7 +208,7 @@ class _WeightedVertex(_Vertex):
         - all(self in u.neighbours for u in self.neighbours)
     """
     item: Track
-    neighbours: dict[_WeightedVertex, Union[int, float]]
+    neighbours: dict[_WeightedVertex, int]
     occurrences: int
 
     def __init__(self, item: Any) -> None:
@@ -224,13 +224,41 @@ class _WeightedVertex(_Vertex):
         """Return a string representation of this vertex."""
         return f'_WeightedVertex(item={self.item}, occurrences={self.occurrences})'
 
+    def sim_score(self, other: _WeightedVertex) -> float:
+        """Return the similarity score between this item and the given item.
+
+        The similarity score is calculated by taking the sum of the weights of all neighbours (for BOTH self and other)
+        adjacent to BOTH self and other DIVIDED BY the sum of occurences for item1 and item2.
+
+        >>> from load_data import load_graph
+        >>> from input import manage_io
+        >>> PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json', \
+                                                'data/mpd.slice.1000-1999.json', \
+                                                'data/mpd.slice.2000-2999.json'])
+        >>> toxic_obj = TRACKS_TO_OBJECTS[('Britney Spears', 'Toxic')]
+        >>> saymyname_obj = TRACKS_TO_OBJECTS[('Destiny\\'s Child', 'Say My Name')]
+        >>> v1 = PLAYLIST_GRAPH._vertices[toxic_obj]
+        >>> v2 = PLAYLIST_GRAPH._vertices[saymyname_obj]
+        >>> v1.sim_score(v2)
+        >>>
+        # TODO: DELETE THE DOCTEST SHIT ABOVE!!!!
+        """
+        total_occurrences = self.occurrences + other.occurrences
+        neighbours = set(self.neighbours.keys())
+        other_neighbours = set(other.neighbours.keys())
+        adj_to_both = neighbours.intersection(other_neighbours)
+
+        sum_weights = sum(self.neighbours[v] + other.neighbours[v] for v in adj_to_both)
+
+        return sum_weights / total_occurrences
+
 
 class WeightedGraph(Graph):
     """A weighted graph used to represent a playlist network that keeps track of Tracks in playlists.
 
     Instance Attributes:
          - tracks_to_objects:
-              A mapping of Tracks in the tuple ({artist_name}, {track_name}) to their
+              A mapping of Tracks in the tuple (<artist_name>, <track_name>) to their
               corresponding Track object
     """
     # Private Instance Attributes:
@@ -239,7 +267,7 @@ class WeightedGraph(Graph):
     #         Maps item to _WeightedVertex object.
 
     # tracks_to_objects: dict[tuple[str, str], Track]
-    # TODO: Delete if needed
+    # TODO: Delete above if needed
     _vertices: dict[Any, _WeightedVertex]
 
     def __init__(self) -> None:
@@ -299,7 +327,7 @@ class WeightedGraph(Graph):
     #     Raise ValueError if given track tuple is not a key in self.tracks_to_objects.
     #
     #     Track tuple is formatted as such:
-    #         - ({artist_name}, {track_name})
+    #         - (<artist_name>, <track_name>)
     #     """
     #     if track_tup not in self.tracks_to_objects:
     #         raise ValueError(f'{track_tup} does not appear in this graph.')
@@ -317,7 +345,7 @@ class WeightedGraph(Graph):
         vertex = self._vertices[item]
         return vertex.occurrences
 
-    def get_weight(self, item1: Any, item2: Any) -> Union[int, float]:
+    def get_weight(self, item1: Any, item2: Any) -> int:
         """Return the weight of the edge between the given items.
 
         Return 0 if item1 and item2 are not adjacent.
@@ -333,16 +361,73 @@ class WeightedGraph(Graph):
         v2 = self._vertices[item2]
         return v1.neighbours.get(v2, 0)
 
-    def average_weight(self, item: Any) -> float:
-        """Return the average weight of the edges adjacent to the vertex corresponding to item.
+    # TODO: Delete below if not needed
+    # def average_weight(self, item: Any) -> float:
+    #     """Return the average weight of the edges adjacent to the vertex corresponding to item.
+    #
+    #     Raise ValueError if item does not corresponding to a vertex in the graph.
+    #     """
+    #     if item in self._vertices:
+    #         v = self._vertices[item]
+    #         return sum(v.neighbours.values()) / len(v.neighbours)
+    #     else:
+    #         raise ValueError
 
-        Raise ValueError if item does not corresponding to a vertex in the graph.
+    def sim_score(self, item1: Any, item2: Any) -> float:
+        """Return the similarity score between two items in this graph.
+
+        The similarity score is calculated by taking the sum of the weights of all neighbours adjacent to BOTH item1
+        and item2 DIVIDED BY the sum of occurences for item1 and item2.
+
+        If item1 or item2 is not in this graph, then raise a ValueError.
+
+        >>> from load_data import load_graph
+        >>> from input import manage_io
+        >>> PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json', \
+                                                'data/mpd.slice.1000-1999.json', \
+                                                'data/mpd.slice.2000-2999.json'])
         """
-        if item in self._vertices:
-            v = self._vertices[item]
-            return sum(v.neighbours.values()) / len(v.neighbours)
-        else:
-            raise ValueError
+        if item1 not in self._vertices:
+            raise ValueError(f'{item1} is not in this graph.')
+        if item2 not in self._vertices:
+            raise ValueError(f'{item2} is not in this graph.')
+
+        v1 = self._vertices[item1]
+        v2 = self._vertices[item2]
+
+        assert v1.sim_score(v2) == v2.sim_score(v1)
+
+        return v1.sim_score(v2)
+
+    def get_recommendations(self, tracks_liked: set[Track], recc_limit: int = 10, occur_limit: int = 30) \
+            -> list[tuple[Track, float]]:
+        """Return a list of <recc_limit> Tracks recommended based off of given track_liked.
+        For each track liked, similarity scores are calculated. The tracks recommended are the tracks with
+        the highest SUM of similarity across the rated tracks. Recommended tracks DO NOT include tracks liked.
+        Ties are broken by descending alphabetical order.
+
+        To make "independent" and/or less popular artists become discovered, recommendations DO NOT include
+        Tracks with more than <occur_limit> occurrences in this graph.
+
+        Preconditions:
+            - track_ratings != {}
+            - all(track in self._vertices for track in track_ratings)
+        """
+        similarity = {}  # Maps Tracks to similarity score
+
+        for track in tracks_liked:
+            for neighbour in self._vertices[track].neighbours:
+                # Check if neighbour is a valid song to recommend
+                if neighbour not in tracks_liked and neighbour.occurrences <= occur_limit:
+                    sim_score = self.sim_score(track, neighbour.item)
+                    similarity[track] = similarity.get(track, 0) + sim_score
+
+        assert similarity != {}
+
+        top_similarity_scores = [(track, similarity[track]) for track in similarity]
+        top_similarity_scores.sort(key=lambda x: (x[1], x[0]), reverse=True)
+
+        return top_similarity_scores[:recc_limit]
 
     def to_networkx(self, max_vertices: int = 5000) -> nx.Graph:
         """Convert this graph into a networkx Graph.

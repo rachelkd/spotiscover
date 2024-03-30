@@ -58,7 +58,7 @@ def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict
 
 def load_graph(file_names: list[str]) -> tuple[WeightedGraph, dict]:
     """Returns a WeightedGraph that contains all tracks in the file_names' data AND
-    a mapping of each track in the data (formatted as ({artist_name}, {track_name}) to its respective
+    a mapping of each track in the data (formatted as (artist_name, track_name) to its respective
     Track object.
 
     - Each vertex represents a track in our playlist data.
