@@ -13,9 +13,9 @@ from load_data import load_graph
 from graph_visualization import visualize_graph
 # from classes import WeightedGraph
 
-PLAYLIST_GRAPH = load_graph(['data/mpd.slice.0-999.json',
-                             'data/mpd.slice.1000-1999.json',
-                             'data/mpd.slice.2000-2999.json'])
+PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
+                                                'data/mpd.slice.1000-1999.json',
+                                                'data/mpd.slice.2000-2999.json'])
 
 # top_songs = sorted(PLAYLIST_GRAPH._vertices.keys(), key=lambda k: PLAYLIST_GRAPH._vertices[k].occurrences, reverse=True)
 
