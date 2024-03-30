@@ -420,12 +420,12 @@ class WeightedGraph(Graph):
                 # Check if neighbour is a valid song to recommend
                 if neighbour not in tracks_liked and neighbour.occurrences <= occur_limit:
                     sim_score = self.sim_score(track, neighbour.item)
-                    similarity[track] = similarity.get(track, 0) + sim_score
+                    similarity[neighbour.item] = similarity.get(track, 0) + sim_score
 
         assert similarity != {}
 
         top_similarity_scores = [(track, similarity[track]) for track in similarity]
-        top_similarity_scores.sort(key=lambda x: (x[1], x[0]), reverse=True)
+        top_similarity_scores.sort(key=lambda x: (x[1], x[0].track_name), reverse=True)
 
         return top_similarity_scores[:recc_limit]
 

@@ -23,8 +23,8 @@ def manage_io(g: WeightedGraph, num_reccomend: int = 10) -> None:
     for i in range(len(tracks_to_like)):
         print(f'{i + 1}. {tracks_to_like[i].artist_name} - {tracks_to_like[i].track_name}')
     print('===================================================')
-    index_liked_tracks = input('Type the number of the songs that you like (e.g., \"1,3,4\"), '
-                               'separated by commas: \n')
+    index_liked_tracks = input('Type the number of the songs that you like (e.g., \"1 3 4\"), '
+                               'separated by spaces: \n')
 
     # Check that three songs are liked
     while len(index_liked_tracks.split()) != 3 or any(not (num.isdigit() and 0 < int(num) <= 10)
