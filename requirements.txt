@@ -3,6 +3,7 @@
 python-ta~=2.7.0
 networkx
 plotly>=5.18.0
+flask
 
 # -------- DELETE BELOW UPON SUBMISSION
 
