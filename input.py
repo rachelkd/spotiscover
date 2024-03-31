@@ -13,7 +13,7 @@ from classes import WeightedGraph, Track
 import random
 
 
-def manage_io(g: WeightedGraph, num_reccomend: int = 10) -> None:
+def manage_io(g: WeightedGraph, num_reccommend: int = 10) -> None:
     """Asks user to like ten randomly-chosen tracks (vertices) in the given graph.
     Returns <num_recommend> recommended Tracks to user.
     """
@@ -35,7 +35,7 @@ def manage_io(g: WeightedGraph, num_reccomend: int = 10) -> None:
 
     liked_tracks = {tracks_to_like[int(num) - 1] for num in index_liked_tracks.split()}
 
-    recommended_tracks = g.get_recommendations(liked_tracks, num_reccomend, occur_limit=30)
+    recommended_tracks = g.get_recommendations(liked_tracks, num_reccommend, occur_limit=30)
 
     for track in recommended_tracks:
         print(f'{track[0].artist_name} - {track[0].track_name} : {track[1]}')
