@@ -229,19 +229,6 @@ class _WeightedVertex(_Vertex):
 
         The similarity score is calculated by taking the sum of the weights of all neighbours (for BOTH self and other)
         adjacent to BOTH self and other DIVIDED BY the sum of occurences for item1 and item2.
-
-        >>> from load_data import load_graph
-        >>> from input import manage_io
-        >>> PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json', \
-                                                'data/mpd.slice.1000-1999.json', \
-                                                'data/mpd.slice.2000-2999.json'])
-        >>> toxic_obj = TRACKS_TO_OBJECTS[('Britney Spears', 'Toxic')]
-        >>> saymyname_obj = TRACKS_TO_OBJECTS[('Destiny\\'s Child', 'Say My Name')]
-        >>> v1 = PLAYLIST_GRAPH._vertices[toxic_obj]
-        >>> v2 = PLAYLIST_GRAPH._vertices[saymyname_obj]
-        >>> v1.sim_score(v2)
-        >>>
-        # TODO: DELETE THE DOCTEST SHIT ABOVE!!!!
         """
         total_occurrences = self.occurrences + other.occurrences
         neighbours = set(self.neighbours.keys())
@@ -266,16 +253,12 @@ class WeightedGraph(Graph):
     #         A collection of the vertices contained in this graph.
     #         Maps item to _WeightedVertex object.
 
-    # tracks_to_objects: dict[tuple[str, str], Track]
-    # TODO: Delete above if needed
     _vertices: dict[Any, _WeightedVertex]
 
     def __init__(self) -> None:
         """Initialize an empty graph (no vertices or edges),
         and an empty mapping from track details to Track objects."""
         self._vertices = {}
-        # self.tracks_to_objects = {}
-        # TODO: Delete if needed
 
         Graph.__init__(self)
 
@@ -287,8 +270,6 @@ class WeightedGraph(Graph):
         """
         if item not in self._vertices:
             self._vertices[item] = _WeightedVertex(item)
-            # self.tracks_to_objects[(item.artist_name, item.track_name)] = item
-            # TODO: Delete if needed
         else:
             track = self._vertices[item]
             track.occurrences += 1
@@ -380,12 +361,6 @@ class WeightedGraph(Graph):
         and item2 DIVIDED BY the sum of occurences for item1 and item2.
 
         If item1 or item2 is not in this graph, then raise a ValueError.
-
-        >>> from load_data import load_graph
-        >>> from input import manage_io
-        >>> PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json', \
-                                                'data/mpd.slice.1000-1999.json', \
-                                                'data/mpd.slice.2000-2999.json'])
         """
         if item1 not in self._vertices:
             raise ValueError(f'{item1} is not in this graph.')
