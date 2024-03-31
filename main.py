@@ -31,6 +31,7 @@ manage_io(PLAYLIST_GRAPH)
 # visualize_graph(PLAYLIST_GRAPH, max_vertices=800)
 app = create_app()
 
+
 if __name__ == '__main__':
     app.run(debug=True)
     # import python_ta

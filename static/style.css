@@ -1,9 +1,7 @@
-* {
-    font-family:'Poppins', sans-serif;
-}
+
 
 html {
-    background-color: black;
+    background-color: #000300;
 }
 
 @keyframes spin {
