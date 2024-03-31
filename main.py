@@ -21,13 +21,6 @@ PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
 
 manage_io(PLAYLIST_GRAPH)
 
-
-# top_songs = sorted(PLAYLIST_GRAPH._vertices.keys(), key=lambda k: PLAYLIST_GRAPH._vertices[k].occurrences, reverse=True)
-
-# for i in range(100):
-#     print(f'{i + 1}. {top_songs[i].artist_name} - {top_songs[i].track_name} '
-#           f'\t\t\t {PLAYLIST_GRAPH.get_occurrences(top_songs[i])}')
-
 # visualize_graph(PLAYLIST_GRAPH, max_vertices=800)
 app = create_app()
 
