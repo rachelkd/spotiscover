@@ -39,8 +39,8 @@ def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict
         for track in tracks:
             # Check if track is already in graph
             if (track['artist_name'], track['track_name']) not in tracks_to_objects:
-                track_obj = Track(track['track_name'], track['artist_name'], track['album_name'],
-                                  track['track_uri'], track['artist_uri'], track['album_uri'])
+                uris = [track['track_uri'], track['artist_uri'], track['album_uri']]
+                track_obj = Track(track['track_name'], track['artist_name'], track['album_name'], uris)
                 tracks_to_objects[(track['artist_name'], track['track_name'])] = track_obj
             else:
                 # Track already exists in graph

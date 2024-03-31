@@ -46,17 +46,16 @@ class Track:
     artist_uri: str
     album_uri: str
 
-    def __init__(self, track_name: str, artist_name: str, album_name: str,
-                 track_uri: str, artist_uri: str, album_uri: str) -> None:
+    def __init__(self, track_name: str, artist_name: str, album_name: str, uris: list[str]) -> None:
         """Initialize a new Track with the given track name, artist name, album name,
-        and respective Spotify Uniform Resource Indicators (URIs).
+        and respective Spotify Uniform Resource Indicators (URIs) in the same order.
         """
         self.track_name = track_name
         self.artist_name = artist_name
         self.album_name = album_name
-        self.track_uri = track_uri
-        self.artist_uri = artist_uri
-        self.album_uri = album_uri
+        self.track_uri = uris[0]
+        self.artist_uri = uris[1]
+        self.album_uri = uris[2]
         self.playlists = set()
 
     def __str__(self) -> str:
@@ -399,7 +398,7 @@ class WeightedGraph(Graph):
 
         assert similarity != {}
 
-        top_similarity_scores = [(track, similarity[track]) for track in similarity]
+        top_similarity_scores = [(t, similarity[t]) for t in similarity]
         top_similarity_scores.sort(key=lambda x: (x[1], x[0].track_name), reverse=True)
 
         return top_similarity_scores[:recc_limit]
