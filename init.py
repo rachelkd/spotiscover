@@ -9,14 +9,14 @@ Copyright and Usage Information
 ==============================
 This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 """
-from flask import Flask
+from flask import Flask, session
 
 
 def create_app():
     app = Flask(__name__)
-    from views import VIEWS
-
-    app.register_blueprint(VIEWS, url_prefix='/')
+    from views import views
+    app.secret_key='1893tbdiub3u3'
+    app.register_blueprint(views, url_prefix='/')
 
     return app
 
