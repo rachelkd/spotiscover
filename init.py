@@ -15,9 +15,8 @@ from views import VIEWS
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    # from views import views
-
-    app.register_blueprint(VIEWS, url_prefix='/')
+    app.secret_key = "this_is_not_important_key:)"
+    from views import views
 
     return app
 
