@@ -10,13 +10,13 @@ Copyright and Usage Information
 This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 """
 from flask import Flask
-from views import VIEWS
 
 
-def create_app() -> Flask:
+def create_app():
     app = Flask(__name__)
-    app.secret_key = "this_is_not_important_key:)"
-    from views import views
+    from views import VIEWS
+
+    app.register_blueprint(VIEWS, url_prefix='/')
 
     return app
 

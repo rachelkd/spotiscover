@@ -373,9 +373,9 @@ class WeightedGraph(Graph):
 
         return v1.sim_score(v2)
 
-    def get_recommendations(self, tracks_liked: set[Track], recc_limit: int = 10, occur_limit: int = 30) \
+    def get_recommendations(self, tracks_liked: set[Track], rec_limit: int = 10, occur_limit: int = 20) \
             -> list[tuple[Track, float]]:
-        """Return a list of <recc_limit> Tracks recommended based off of given track_liked.
+        """Return a list of <rec_limit> Tracks recommended based off of given track_liked.
         For each track liked, similarity scores are calculated. The tracks recommended are the tracks with
         the highest SUM of similarity across the rated tracks. Recommended tracks DO NOT include tracks liked.
         Ties are broken by descending alphabetical order.
@@ -401,7 +401,7 @@ class WeightedGraph(Graph):
         top_similarity_scores = [(t, similarity[t]) for t in similarity]
         top_similarity_scores.sort(key=lambda x: (x[1], x[0].track_name), reverse=True)
 
-        return top_similarity_scores[:recc_limit]
+        return top_similarity_scores[:rec_limit]
 
 
 if __name__ == '__main__':
