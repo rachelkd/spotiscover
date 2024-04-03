@@ -227,7 +227,7 @@ class _WeightedVertex(_Vertex):
         """Return the similarity score between this item and the given item.
 
         The similarity score is calculated by taking the sum of the weights of all neighbours (for BOTH self and other)
-        adjacent to BOTH self and other DIVIDED BY the sum of occurences for item1 and item2.
+        adjacent to BOTH self and other DIVIDED BY the sum of occurrences for item1 and item2.
         """
         total_occurrences = self.occurrences + other.occurrences
         neighbours = set(self.neighbours.keys())
@@ -357,7 +357,7 @@ class WeightedGraph(Graph):
         """Return the similarity score between two items in this graph.
 
         The similarity score is calculated by taking the sum of the weights of all neighbours adjacent to BOTH item1
-        and item2 DIVIDED BY the sum of occurences for item1 and item2.
+        and item2 DIVIDED BY the sum of occurrences for item1 and item2.
 
         If item1 or item2 is not in this graph, then raise a ValueError.
         """
