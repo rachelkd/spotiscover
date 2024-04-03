@@ -10,14 +10,11 @@ Copyright and Usage Information
 This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 """
 from load_data import load_graph
-# from input import manage_io  TODO: DELETE UPON SUBMISSION
-# from graph_visualization import visualize_graph  TODO: DELETE UPON SUBMISSION
 from init import create_app
-# from classes import WeightedGraph  TODO: DELETE UPON SUBMISSION
 
-PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
-                                                'data/mpd.slice.1000-1999.json',
-                                                'data/mpd.slice.2000-2999.json'])
+# PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
+#                                                 'data/mpd.slice.1000-1999.json',
+#                                                 'data/mpd.slice.2000-2999.json'])
 
 # manage_io(PLAYLIST_GRAPH)  TODO: DELETE UPON SUBMISSION
 # visualize_graph(PLAYLIST_GRAPH, max_vertices=800)  TODO: DELETE UPON SUBMISSION
