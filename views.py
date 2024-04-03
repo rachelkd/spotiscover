@@ -13,7 +13,6 @@ This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 from flask import Blueprint, render_template, request, session
 from input import return_random_track
 from load_data import load_graph
-from track_to_spotify_track import create_track_from_api_response, api_response, get_track_embed_html
 
 PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
                                                 'data/mpd.slice.1000-1999.json',

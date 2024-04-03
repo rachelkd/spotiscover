@@ -1,8 +1,22 @@
-import classes
+"""CSC111 Winter 2024 Project 2:
+How Do We Create Playlists? An Investigation into Song Recommendations Based on Similarity and Occurrence in Playlists
+
+Module Description
+==================
+This module manages translating our own Track objects to SpotifyTrack objects to work with the Spotipy package.
+
+Copyright and Usage Information
+==============================
+This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
+"""
 from dataclasses import dataclass
 from typing import Any, List
-import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+
+import spotipy
+
+import classes
+
 
 @dataclass
 class ExternalURLs:
@@ -49,7 +63,7 @@ class ExternalIDs:
 
 
 @dataclass
-class Spotify_track:
+class SpotifyTrack:
     album: Album
     artists: List[Artist]
     disc_number: int
@@ -69,7 +83,7 @@ class Spotify_track:
     uri: str
 
 
-def create_track_from_api_response(track_data: Any) -> Spotify_track:
+def create_track_from_api_response(track_data: Any) -> SpotifyTrack:
     album_external_urls = ExternalURLs(spotify=track_data['album']['external_urls']['spotify'])
     track_external_urls = ExternalURLs(spotify=track_data['external_urls']['spotify'])
 
@@ -99,38 +113,43 @@ def create_track_from_api_response(track_data: Any) -> Spotify_track:
 
     external_ids = ExternalIDs(isrc=track_data['external_ids']['isrc'])
 
-    return Spotify_track(album=album,
-                 artists=artists,
-                 disc_number=track_data['disc_number'],
-                 duration_ms=track_data['duration_ms'],
-                 explicit=track_data['explicit'],
-                 external_ids=external_ids,
-                 external_urls=track_external_urls,
-                 href=track_data['href'],
-                 id=track_data['id'],
-                 is_local=track_data['is_local'],
-                 is_playable=track_data['is_playable'],
-                 name=track_data['name'],
-                 popularity=track_data['popularity'],
-                 preview_url=track_data['preview_url'],
-                 track_number=track_data['track_number'],
-                 type=track_data['type'],
-                 uri=track_data['uri']
-                 )
-
+    return SpotifyTrack(album=album,
+                        artists=artists,
+                        disc_number=track_data['disc_number'],
+                        duration_ms=track_data['duration_ms'],
+                        explicit=track_data['explicit'],
+                        external_ids=external_ids,
+                        external_urls=track_external_urls,
+                        href=track_data['href'],
+                        id=track_data['id'],
+                        is_local=track_data['is_local'],
+                        is_playable=track_data['is_playable'],
+                        name=track_data['name'],
+                        popularity=track_data['popularity'],
+                        preview_url=track_data['preview_url'],
+                        track_number=track_data['track_number'],
+                        type=track_data['type'],
+                        uri=track_data['uri']
+                        )
 
 
 def get_track_embed_html(uri: str) -> str:
-    return f'<iframe class="text-white border-radius-[12px]" src="https://open.spotify.com/embed/track/{uri}" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>'
+    return (f'<iframe class="text-white border-radius-[12px]" src="https://open.spotify.com/embed/track/{uri}" '
+            f'width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; '
+            f'encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>')
+
 
 def api_response(t: classes.Track) -> Any:
     uri = t.track_uri
-
-
-
     spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
-    result = spotify.search(q=uri, type='track',limit=1, offset=0)
+    result = spotify.search(q=uri, type='track', limit=1, offset=0)
     return result
 
 
-#def track_to_spotify_track(t: classes.Track) -> Spotify_track:
+if __name__ == '__main__':
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': ['spotipy', 'classes', 'spotipy.oauth2'],  # the names (strs) of imported modules
+        'allowed-io': ['print', 'open', 'input'],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })
