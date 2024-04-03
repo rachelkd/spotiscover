@@ -15,12 +15,9 @@ from typing import TextIO
 from classes import Track, WeightedGraph
 
 
-def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict, uris_to_objects: dict) -> None:
-    """Helper function for load_data.
-    Read playlist data (JSON file) in file and *mutates* given graph to add vertices and edges
+def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict) -> None:
+    """Read playlist data (JSON file) in file and *mutates* given graph to add vertices and edges
     according to data.
-    Maps a tuple of track info (<artist_name>, <track_name>) to the corresponding Track object.
-    Maps track URIs to Track object
 
     - Each track in a playlist in our data is a Track object.
     - Each edge indicates that two Tracks appear in the same playlist
@@ -45,7 +42,6 @@ def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict
                 uris = [track['track_uri'], track['artist_uri'], track['album_uri']]
                 track_obj = Track(track['track_name'], track['artist_name'], track['album_name'], uris)
                 tracks_to_objects[(track['artist_name'], track['track_name'])] = track_obj
-                uris_to_objects[uris[0]] = track_obj
             else:
                 # Track already exists in graph
                 track_obj = tracks_to_objects[(track['artist_name'], track['track_name'])]
@@ -60,7 +56,7 @@ def _add_tracks_to_graph(g: WeightedGraph, file: TextIO, tracks_to_objects: dict
             tracks_in_playlist_so_far.add(track_obj)
 
 
-def load_graph(file_names: list[str]) -> tuple[WeightedGraph, dict, dict]:
+def load_graph(file_names: list[str]) -> tuple[WeightedGraph, dict]:
     """Returns a WeightedGraph that contains all tracks in the file_names' data AND
     a mapping of each track in the data (formatted as (artist_name, track_name) to its respective
     Track object.
@@ -71,13 +67,12 @@ def load_graph(file_names: list[str]) -> tuple[WeightedGraph, dict, dict]:
     g = WeightedGraph()
 
     tracks_to_objects = {}  # Maps tuple ({artist_name}, {track_name}) to corresponding Track object
-    uris_to_objects = {}  # Maps track URIs to Track object
 
     for file_dir in file_names:
         with open(file_dir) as file:
-            _add_tracks_to_graph(g, file, tracks_to_objects, uris_to_objects)
+            _add_tracks_to_graph(g, file, tracks_to_objects)
 
-    return g, tracks_to_objects, uris_to_objects
+    return g, tracks_to_objects
 
 
 if __name__ == '__main__':

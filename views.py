@@ -14,9 +14,9 @@ from flask import Blueprint, render_template, request, session
 from input import return_random_track
 from load_data import load_graph
 
-PLAYLIST_GRAPH, TRACKS_TO_OBJECTS, URIS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
-                                                                 'data/mpd.slice.1000-1999.json',
-                                                                 'data/mpd.slice.2000-2999.json'])
+PLAYLIST_GRAPH, TRACKS_TO_OBJECTS = load_graph(['data/mpd.slice.0-999.json',
+                                                'data/mpd.slice.1000-1999.json',
+                                                'data/mpd.slice.2000-2999.json'])
 
 VIEWS = Blueprint('views', __name__)
 LIKED_SONGS_SO_FAR = set()
