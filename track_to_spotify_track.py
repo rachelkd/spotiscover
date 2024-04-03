@@ -125,13 +125,12 @@ def get_track_embed_html(uri: str) -> str:
 
 def api_response(t: classes.Track) -> Any:
     uri = t.track_uri
-   
 
-    
+
+
     spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
     result = spotify.search(q=uri, type='track',limit=1, offset=0)
-    return result 
+    return result
 
 
 #def track_to_spotify_track(t: classes.Track) -> Spotify_track:
-    
