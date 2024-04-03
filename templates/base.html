@@ -10,7 +10,7 @@
 <div class="text-white">
     <div class='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
         <p class="text-[#1db954] font-bold p-2">SONGS JUST RIGHT FOR YOU</p>
-        <h1 class="md:text-7xl sm:text-6xl text-4xl font-bold md:py-6">Recomendations you will love.</h1>
+        <h1 class="md:text-7xl sm:text-6xl text-4xl font-bold md:py-6">Recomendations you love.</h1>
         <div>
             <p class="md:text-4xl sm:text-3xl text-xl font-bold py-4">Using spotify's million playlist dataset</p>
         </div>
@@ -21,23 +21,42 @@
 
 </div>
 
-<form class='bg-black mt-5 md:px-5xl sm:px-4xl px:3xl font-bold' method="post" onsubmit="startSpinner()">
-    <div
-                    class="m-8 w-32 rounded-full flex bg-gray-50 border border-gray-300 py-2 px-4 space-x-4 group-checked:border-gray-500">
-                    <div>
-                        <input type="radio" name="rdo" id="yes" class="peer hidden">
-                        <label for="yes"
-                            class="text-center cursor-pointer peer-checked:text-blue-700 peer-checked:cursor-default text-gray-400">Yes</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="rdo" id="no" class="peer hidden">
-                        <label for="no"
-                            class="cursor-pointer peer-checked:text-gray-800 peer-checked:cursor-default text-gray-400">No</label>
-                    </div>
-    </div>
-    <button class="bg-[#1db954] text-black font-bold rounded-full px-8 py-1 text-2xl cursor-pointer transition-all duration-300 hover:scale-105" type="submit" id="submit-button">
+
+<!-- <div class="text-white">{{spotify_track}} -->
+<!-- </div> -->
+<div class="my-[-150px]">
+<div class="text-white flex justify-center items-center]">
+    <iframe class="text-white border-radius-[12px]" src='https://open.spotify.com/embed/track/{{uri}}' width="50%"
+        height="100" frameBorder="0" allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</div>
+
+<div class="flex justify-center items-center text-white my-[-50px] w-1/2 mx-auto p-[10px]">
+    <form class="text-center mt-5 md:px-5xl sm:px-4xl px:3xl" method="post" onsubmit="startSpinner()">
+        <div
+            class="items-center m-8 w-25 rounded-full flex bg-gray-50 border border-gray-300 py-2 px-4 space-x-4 group-checked:border-gray-500">
+            <p class=" text-gray-400">Do you like this song?</p>
+            <div>
+                <input type="radio" name="rdo" id="yes" class="peer hidden" required value="yes">
+                <label for="yes"
+                    class="items-center cursor-pointer peer-checked:text-[#1db954] peer-checked:cursor-default text-gray-400">Yes</label>
+            </div>
+            <div>
+                <input type="radio" name="rdo" id="no" class="peer hidden" required value="no">
+                <label for="no"
+                    class="items-center justify-center text-center cursor-pointer peer-checked:text-[#FF0000] peer-checked:cursor-default text-gray-400">No</label>
+            </div>
+        </div>
+
+
+
+    <div class="items-center">
+    <button class=" justify-center items-center bg-[#1db954] text-black rounded-md px-8 py-1 text-2xl cursor-pointer transition-all duration-300 hover:scale-105" type="submit" id="submit-button">
         <span id="spinner" class="hidden mr-2"></span>
         Submit
     </button>
+</div>
 </form>
 </div>
+</div>
+
