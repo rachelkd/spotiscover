@@ -18,13 +18,13 @@ PLAYLIST_GRAPH, TRACKS_TO_OBJECTS, URIS_TO_OBJECTS = load_graph(['data/mpd.slice
                                                                  'data/mpd.slice.1000-1999.json',
                                                                  'data/mpd.slice.2000-2999.json'])
 
-views = Blueprint('views', __name__)
+VIEWS = Blueprint('views', __name__)
 LIKED_SONGS_SO_FAR = set()
 
 
-@views.route('/', methods=['GET', 'POST'])
-@views.route('/')
-def home():
+@VIEWS.route('/', methods=['GET', 'POST'])
+@VIEWS.route('/')
+def home() -> str:
     global LIKED_SONGS_SO_FAR
 
     if request.method == 'POST':
@@ -38,7 +38,7 @@ def home():
         recs = PLAYLIST_GRAPH.get_recommendations(tracks_liked=LIKED_SONGS_SO_FAR)
         LIKED_SONGS_SO_FAR.clear()  # Clear liked_songs_so_far after generating recommendations
 
-        uris = [rec[0].track_uri[14:] for rec in recs]
+        uris = [r[0].track_uri[14:] for r in recs]
         return render_template('rec.html', uris=uris)
     else:
         track = return_random_track(PLAYLIST_GRAPH, [])
@@ -48,8 +48,8 @@ def home():
         return render_template("base.html", uri=uri)
 
 
-@views.route('/recomendation')
-def rec():
+@VIEWS.route('/recomendation')
+def rec() -> str:
     return render_template('rec.html')
 
 

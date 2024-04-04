@@ -12,11 +12,11 @@ This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 from flask import Flask, session
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
-    from views import views
-    app.secret_key='1893tbdiub3u3'
-    app.register_blueprint(views, url_prefix='/')
+    from views import VIEWS
+    app.secret_key = '1893tbdiub3u3'
+    app.register_blueprint(VIEWS, url_prefix='/')
 
     return app
 

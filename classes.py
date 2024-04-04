@@ -14,8 +14,6 @@ This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 from __future__ import annotations
 from typing import Any, Union
 
-import networkx as nx
-
 
 class Track:
     """A track in a playlist.
@@ -170,28 +168,6 @@ class Graph:
         """
         return set(self._vertices.keys())
 
-    def to_networkx(self, max_vertices: int = 5000) -> nx.Graph:
-        """Convert this graph into a networkx Graph.
-
-        max_vertices specifies the maximum number of vertices that can appear in the graph.
-        (This is necessary to limit the visualization output for large graphs.)
-        """
-        graph_nx = nx.Graph()
-        for v in self._vertices.values():
-            graph_nx.add_node(v.item)
-
-            for u in v.neighbours:
-                if graph_nx.number_of_nodes() < max_vertices:
-                    graph_nx.add_node(u.item)
-
-                if u.item in graph_nx.nodes:
-                    graph_nx.add_edge(v.item, u.item)
-
-            if graph_nx.number_of_nodes() >= max_vertices:
-                break
-
-        return graph_nx
-
 
 class _WeightedVertex(_Vertex):
     """A vertex in a weighted playlist graph, used to a represent Track.
@@ -236,7 +212,7 @@ class _WeightedVertex(_Vertex):
 
         sum_weights = sum(self.neighbours[v] + other.neighbours[v] for v in adj_to_both)
 
-        return sum_weights / total_occurrences
+        return sum_weights / (total_occurrences ** 2)
 
 
 class WeightedGraph(Graph):
@@ -301,19 +277,6 @@ class WeightedGraph(Graph):
             # We didn't find an existing vertex for both items.
             raise ValueError
 
-    # def get_track_object(self, track_tup: tuple[str, str]) -> Track:
-    #     """Return the Track corresponding to the given track tuple.
-    #
-    #     Raise ValueError if given track tuple is not a key in self.tracks_to_objects.
-    #
-    #     Track tuple is formatted as such:
-    #         - (<artist_name>, <track_name>)
-    #     """
-    #     if track_tup not in self.tracks_to_objects:
-    #         raise ValueError(f'{track_tup} does not appear in this graph.')
-    #
-    #     return self.tracks_to_objects[track_tup]
-
     def get_occurrences(self, item: Any) -> int:
         """Return the number of times the given item appears in the playlists in this graph.
 
@@ -340,18 +303,6 @@ class WeightedGraph(Graph):
         v1 = self._vertices[item1]
         v2 = self._vertices[item2]
         return v1.neighbours.get(v2, 0)
-
-    # TODO: Delete below if not needed
-    # def average_weight(self, item: Any) -> float:
-    #     """Return the average weight of the edges adjacent to the vertex corresponding to item.
-    #
-    #     Raise ValueError if item does not corresponding to a vertex in the graph.
-    #     """
-    #     if item in self._vertices:
-    #         v = self._vertices[item]
-    #         return sum(v.neighbours.values()) / len(v.neighbours)
-    #     else:
-    #         raise ValueError
 
     def sim_score(self, item1: Any, item2: Any) -> float:
         """Return the similarity score between two items in this graph.
@@ -394,7 +345,7 @@ class WeightedGraph(Graph):
                 # Check if neighbour is a valid song to recommend
                 if neighbour not in tracks_liked and neighbour.occurrences <= occur_limit:
                     sim_score = self.sim_score(track, neighbour.item)
-                    similarity[neighbour.item] = similarity.get(track, 0) + sim_score
+                    similarity[neighbour.item] = similarity.get(neighbour.item, 0) + sim_score
 
         assert similarity != {}
 
