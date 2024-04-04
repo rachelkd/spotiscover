@@ -1,5 +1,5 @@
 # Packages required for Project 2
 
 python-ta~=2.7.0
-plotly>=5.18.0
+flask
 spotipy
