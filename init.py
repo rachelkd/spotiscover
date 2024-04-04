@@ -14,6 +14,8 @@ from views import VIEWS
 
 
 def create_app() -> Flask:
+    """Creates and configures the Flask application. Returns the configured Flask application.
+    """
     app = Flask(__name__)
     # from views import VIEWS
     app.secret_key = '1893tbdiub3u3'

@@ -25,6 +25,13 @@ LIKED_SONGS_SO_FAR = set()
 @VIEWS.route('/', methods=['GET', 'POST'])
 @VIEWS.route('/')
 def home() -> str:
+    """Renders the home page of the application.
+    If a POST request is received, it processes the user's response to the displayed track.
+    If enough songs have been liked, it generates recommendations and renders the recommendation page.
+    If not enough songs have been liked, it renders the base template with a random track.
+
+    Returns the rendered HTML content in str.
+    """
     global LIKED_SONGS_SO_FAR
 
     if request.method == 'POST':
@@ -50,6 +57,9 @@ def home() -> str:
 
 @VIEWS.route('/recomendation')
 def rec() -> str:
+    """Renders the recommendation page.
+    Returns the str rendered HTML content for the recommendation page.
+    """
     return render_template('rec.html')
 
 
