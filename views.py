@@ -3,7 +3,7 @@ How Do We Create Playlists? An Investigation into Song Recommendations Based on 
 
 Module Description
 ==================
-This module manages the directories of the web application.
+This module manages the routing of the web application.
 
 Copyright and Usage Information
 ===============================

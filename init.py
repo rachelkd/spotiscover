@@ -3,18 +3,19 @@ How Do We Create Playlists? An Investigation into Song Recommendations Based on 
 
 Module Description
 ==================
-TODO
+This module creates the views of our web application.
 
 Copyright and Usage Information
 ==============================
 This file is Copyright (c) 2024 Rachel Deng, Ben Henderson, Jeha Park
 """
-from flask import Flask, session
+from flask import Flask
+from views import VIEWS
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    from views import VIEWS
+    # from views import VIEWS
     app.secret_key = '1893tbdiub3u3'
     app.register_blueprint(VIEWS, url_prefix='/')
 

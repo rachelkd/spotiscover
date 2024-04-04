@@ -84,6 +84,6 @@ if __name__ == '__main__':
     import python_ta
     python_ta.check_all(config={
         'extra-imports': ['json', 'classes'],  # the names (strs) of imported modules
-        'allowed-io': ['print', 'open', 'input'],  # the names (strs) of functions that call print/open/input
+        'allowed-io': ['print', 'load_graph', 'input'],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
